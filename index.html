@@ -1,19 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+</head>
 
-  <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
-  </script>
+<body>
+    
+    <img src="#" id="qrcode" alt="">
+
+    <ul id="log">
+    </ul>
+    <button id="async-msg">按钮</button>
+</body>
+<script>
+// You can also require other files to run in this process
+require('./renderer.js')
+// const ipc = require('electron').ipcRenderer;
+// const noticeList = document.getElementById("log");
+
+// ipc.on('notice-event', (event, message) => {
+//     console.log(message) // Prints 'whoooooooh!'
+//     alert(message)
+// });
+
+
+// ipc.on('notice-event', function(event, input) {
+//     let li = document.createElement("li");
+//     li.textContent = input;
+//     console.log(input);
+//     noticeList.appendChild(li);
+// });
+</script>
+
 </html>
