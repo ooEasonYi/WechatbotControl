@@ -6,7 +6,6 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path');
 const url = require('url');
-
 const fs = require('fs');
 const request = require('request');
 const Wechat = require('wechat4u');
@@ -17,11 +16,11 @@ let mainWindow
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 800, height: 600 })
+    mainWindow = new BrowserWindow({ width: 800, height: 700 })
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: path.join(__dirname, '/app/login.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -99,7 +98,7 @@ function wechatInit() {
      * 登录用户头像事件，手机扫描后可以得到登录用户头像的Data URL
      */
     bot.on('user-avatar', avatar => {
-        sendNotice('登录用户头像Data URL：'+ avatar)
+        sendNotice('登录用户头像Data URL：'+ avatar);
     });
     /**
      * 登录成功事件
