@@ -72,9 +72,7 @@ function wechatInit() {
     } catch (e) {
         bot = new Wechat();
     }
-    /**
-     * 启动机器人
-     */
+    
     if (bot.PROP.uin) {
         // 存在登录数据时，可以随时调用restart进行重启
         bot.restart();
