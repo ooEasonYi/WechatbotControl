@@ -16,19 +16,21 @@ let mainWindow
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 800, height: 700 })
+    mainWindow = new BrowserWindow({ width: 800, height: 700 });
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, '/app/login.html'),
         protocol: 'file:',
         slashes: true
-    }))
+    }));
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
+
+
     mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.send('ping', 'whoooooooh!');
+        // mainWindow.webContents.send('notice-event', 'whoooooooh!');
         wechatInit();
     });
     // Emitted when the window is closed.
@@ -87,7 +89,7 @@ function wechatInit() {
         //     small: true
         // })
         // console.log('二维码链接：', 'https://login.weixin.qq.com/qrcode/' + uuid)
-        sendNotice("二维码链接：https://login.weixin.qq.com/qrcode/"+ uuid);
+        sendNotice("二维码链接：https://login.weixin.qq.com/qrcode/" + uuid);
         mainWindow.webContents.send('login', 'https://login.weixin.qq.com/qrcode/' + uuid);
     });
 
@@ -96,7 +98,7 @@ function wechatInit() {
      * 登录用户头像事件，手机扫描后可以得到登录用户头像的Data URL
      */
     bot.on('user-avatar', avatar => {
-        sendNotice('登录用户头像Data URL：'+ avatar);
+        sendNotice('登录用户头像Data URL：' + avatar);
     });
     /**
      * 登录成功事件
@@ -104,7 +106,12 @@ function wechatInit() {
     bot.on('login', () => {
         sendNotice('登录成功')
         // 保存数据，将数据序列化之后保存到任意位置
-        fs.writeFileSync('./sync-data.json', JSON.stringify(bot.botData))
+        fs.writeFileSync('./sync-data.json', JSON.stringify(bot.botData));
+        mainWindow.loadURL(url.format({
+            pathname: path.join(__dirname, '/app/index.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
     });
     /**
      * 登出成功事件
@@ -119,7 +126,7 @@ function wechatInit() {
      */
     bot.on('contacts-updated', contacts => {
         // console.log(contacts)
-        sendNotice('联系人数量：'+ Object.keys(bot.contacts).length)
+        sendNotice('联系人数量：' + Object.keys(bot.contacts).length)
     });
     /**
      * 错误事件，参数一般为Error对象
@@ -129,6 +136,6 @@ function wechatInit() {
     });
 }
 
-function sendNotice(message){
+function sendNotice(message) {
     mainWindow.webContents.send('notice-event', message);
 }
