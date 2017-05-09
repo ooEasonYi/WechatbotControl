@@ -7,13 +7,52 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/app.css" />
     <script src="assets/js/vue.min.js"></script>
+    <style>
+        body{
+            background-image: url(assets/images/login-bg.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="login-box">
-        <img src="" alt="">
-        <p>请使用手机扫码登录</p>
+    <div id="loginBox" class="login-box">
+        <img :src="qrCode" alt="">
+        <p>{{message}}</p>
     </div>
+    <script>
+        let ipc = require('electron').ipcRenderer;
+        var data = {
+            qrCode :"",
+            isGetImg:false,
+            message: '正在加载二维码，请稍候....'
+        }
+        var login = new Vue({
+            el: '#loginBox',
+            data: data,
+            isLogin:false
+        });
+
+        ipc.on('getQrcode', (event, message)=>{ 
+            data.qrCode = message;
+            data.isGetImg = true;
+            console.log(message); 
+            
+        });
+        ipc.on('notice-event', (event, message)=>{ 
+            data.message = message;
+            console.log(message); 
+        });
+
+        ipc.on('ipc-login-success', (event, message)=>{ 
+            data.isLogin = message;
+            location.href = "index.html";
+            console.log(message); 
+            
+        });
+    </script>
 </body>
 
 </html>

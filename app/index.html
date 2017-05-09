@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/app.css" />
+    <script src="assets/js/vue.min.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+    <div id="main">
+
+    </div>
+    加载配置
+    <script>
+        let ipc = require('electron').ipcRenderer;
+        let viewModel = {
+            el:"#main",
+            data:{
+                contacts:[],
+                notice:""
+            }
+        }
+        let  main = new Vue(viewModel);
+        ipc.on('ipc-contacts', (event, message)=>{ 
+            viewModel.data.contacts = message;
+            
+            console.log(message); 
+        });
+        ipc.on('notice-event', (event, message)=>{ 
+            viewModel.data.notice = message;
+            console.log(message); 
+        });
+    </script>
+</body>
+</html>

@@ -74,7 +74,7 @@ function wechatInit() {
     } catch (e) {
         bot = new Wechat();
     }
-    
+
     if (bot.PROP.uin) {
         // 存在登录数据时，可以随时调用restart进行重启
         bot.restart();
@@ -89,8 +89,8 @@ function wechatInit() {
         //     small: true
         // })
         // console.log('二维码链接：', 'https://login.weixin.qq.com/qrcode/' + uuid)
-        sendNotice("二维码链接：https://login.weixin.qq.com/qrcode/" + uuid);
-        mainWindow.webContents.send('login', 'https://login.weixin.qq.com/qrcode/' + uuid);
+        sendNotice("使用手机微信扫码登录");
+        mainWindow.webContents.send('getQrcode', 'https://login.weixin.qq.com/qrcode/' + uuid);
     });
 
 
@@ -98,20 +98,23 @@ function wechatInit() {
      * 登录用户头像事件，手机扫描后可以得到登录用户头像的Data URL
      */
     bot.on('user-avatar', avatar => {
-        sendNotice('登录用户头像Data URL：' + avatar);
+        // sendNotice('登录用户头像Data URL：' + avatar);
     });
     /**
      * 登录成功事件
      */
     bot.on('login', () => {
-        sendNotice('登录成功')
+        sendNotice('登录成功,正在加载配置信息...');
         // 保存数据，将数据序列化之后保存到任意位置
         fs.writeFileSync('./sync-data.json', JSON.stringify(bot.botData));
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, '/app/index.html'),
-            protocol: 'file:',
-            slashes: true
-        }));
+        mainWindow.webContents.send('ipc-login-success', true);
+        // mainWindow.loadURL(url.format({
+        //     pathname: path.join(__dirname, '/app/index.html'),
+        //     protocol: 'file:',
+        //     slashes: true
+        // }));
+        
+        
     });
     /**
      * 登出成功事件
@@ -126,7 +129,14 @@ function wechatInit() {
      */
     bot.on('contacts-updated', contacts => {
         // console.log(contacts)
-        sendNotice('联系人数量：' + Object.keys(bot.contacts).length)
+        sendNotice('联系人数量：' + Object.keys(bot.contacts).length);        
+        mainWindow.webContents.send('ipc-contacts', bot.contacts);
+        
+        // mainWindow.webContents.on('did-finish-load', () => {
+        //     // mainWindow.webContents.send('notice-event', 'whoooooooh!');
+        //     // wechatInit();
+            
+        // });
     });
     /**
      * 错误事件，参数一般为Error对象
@@ -137,5 +147,6 @@ function wechatInit() {
 }
 
 function sendNotice(message) {
+    console.log(message);
     mainWindow.webContents.send('notice-event', message);
 }
