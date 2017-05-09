@@ -19,3 +19,6 @@ html,body,div,p{
     height: 270px;
     margin: 42px auto 12px;
 }
+.login-box p{
+    text-align:center;
+}
