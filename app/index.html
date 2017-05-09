@@ -3,37 +3,42 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title></title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/app.css" />
     <script src="assets/js/vue.min.js"></script>
     <style>
+
     </style>
 </head>
-<body>
-    <div id="main">
 
+<body>
+    <div class="container-fluid">
+        <div id="main">
+            {{contacts.length}}
+        </div>
     </div>
-    加载配置
     <script>
         let ipc = require('electron').ipcRenderer;
         let viewModel = {
-            el:"#main",
-            data:{
-                contacts:[],
-                notice:""
+            el: "#main",
+            data: {
+                contacts: [],
+                notice: ""
             }
         }
-        let  main = new Vue(viewModel);
-        ipc.on('ipc-contacts', (event, message)=>{ 
-            viewModel.data.contacts = message;
-            
-            console.log(message); 
+        let main = new Vue(viewModel);
+        ipc.on('ipc-contacts', (event, message) => {
+            viewModel.data.contacts = message.MemberList;
+
+            console.log(viewModel.data);
         });
-        ipc.on('notice-event', (event, message)=>{ 
+        ipc.on('notice-event', (event, message) => {
             viewModel.data.notice = message;
-            console.log(message); 
+            console.log(message);
         });
     </script>
 </body>
+
 </html>

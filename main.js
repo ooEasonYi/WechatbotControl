@@ -107,14 +107,19 @@ function wechatInit() {
         sendNotice('登录成功,正在加载配置信息...');
         // 保存数据，将数据序列化之后保存到任意位置
         fs.writeFileSync('./sync-data.json', JSON.stringify(bot.botData));
+        //获取联系人
+        bot.getContact().then((req) => {
+            mainWindow.webContents.send('ipc-contacts', req);           
+        });
+       
         mainWindow.webContents.send('ipc-login-success', true);
         // mainWindow.loadURL(url.format({
         //     pathname: path.join(__dirname, '/app/index.html'),
         //     protocol: 'file:',
         //     slashes: true
         // }));
-        
-        
+
+
     });
     /**
      * 登出成功事件
@@ -129,13 +134,13 @@ function wechatInit() {
      */
     bot.on('contacts-updated', contacts => {
         // console.log(contacts)
-        sendNotice('联系人数量：' + Object.keys(bot.contacts).length);        
-        mainWindow.webContents.send('ipc-contacts', bot.contacts);
+        sendNotice('联系人数量：' + Object.keys(bot.contacts).length);
         
+
         // mainWindow.webContents.on('did-finish-load', () => {
         //     // mainWindow.webContents.send('notice-event', 'whoooooooh!');
         //     // wechatInit();
-            
+
         // });
     });
     /**
