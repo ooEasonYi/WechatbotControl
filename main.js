@@ -1,14 +1,13 @@
 const electron = require('electron');
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
 
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
-const request = require('request');
 const Wechat = require('wechat4u');
+
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,7 +15,7 @@ let mainWindow
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 800, height: 700 });
+    mainWindow = new BrowserWindow({ width: 600, height: 700 });
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
@@ -109,10 +108,13 @@ function wechatInit() {
         fs.writeFileSync('./sync-data.json', JSON.stringify(bot.botData));
         //获取联系人
         bot.getContact().then((req) => {
-            mainWindow.webContents.send('ipc-contacts', req);           
+            mainWindow.webContents.send('ipc-contacts', req);
         });
-       
+
         mainWindow.webContents.send('ipc-login-success', true);
+        mainWindow.setContentSize(1024, 700, true);
+        mainWindow.setTitle("微信自动化");
+
         // mainWindow.loadURL(url.format({
         //     pathname: path.join(__dirname, '/app/index.html'),
         //     protocol: 'file:',
@@ -135,7 +137,7 @@ function wechatInit() {
     bot.on('contacts-updated', contacts => {
         // console.log(contacts)
         sendNotice('联系人数量：' + Object.keys(bot.contacts).length);
-        
+
 
         // mainWindow.webContents.on('did-finish-load', () => {
         //     // mainWindow.webContents.send('notice-event', 'whoooooooh!');
@@ -147,7 +149,7 @@ function wechatInit() {
      * 错误事件，参数一般为Error对象
      */
     bot.on('error', err => {
-        sendNotice('错误：', err)
+        console.log('错误：', err)
     });
 }
 
